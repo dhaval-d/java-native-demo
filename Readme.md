@@ -24,7 +24,7 @@ install protobuf: <a href="https://github.com/protocolbuffers/protobuf/blob/mast
 
 
 #### Set classpath for Protobuf jar
-I am using Makefile to build files in order. I am using CLASSPATH2 to keep the location of protobuf jar file.
+I am using Makefile to build files in order. I am using CLASSPATH2 environment variable to keep the location of protobuf jar file.
 
 
 
