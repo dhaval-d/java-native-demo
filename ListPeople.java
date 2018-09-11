@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class ListPeople {
+    // load native library
   static{
 	  System.loadLibrary("readprotonative");
   }
