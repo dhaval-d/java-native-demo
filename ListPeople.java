@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-
 // See README.txt for information and build instructions.
-
 import com.example.tutorial.AddressBookProtos.AddressBook;
 import com.example.tutorial.AddressBookProtos.Person;
 import java.io.FileInputStream;
@@ -25,21 +23,25 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-public class ListPeople {
-    // load native library
+public class ListPeople { 
+  // load native library
   static{
-	  System.loadLibrary("readprotonative");
+    System.loadLibrary("readprotonative");
   }
+  
   // Iterates though all people in the AddressBook and prints info about them.
   static void Print(AddressBook addressBook) {	  
-     System.out.println("Reading AddressBook Proto from Java");
-     for (Person person: addressBook.getPeopleList()) {
+    System.out.println("Reading AddressBook Proto from Java");
+    
+    // Iterate through persons
+    for (Person person: addressBook.getPeopleList()) {
       System.out.println("Person ID: " + person.getId());
       System.out.println("  Name: " + person.getName());
       if (!person.getEmail().isEmpty()) {
         System.out.println("  E-mail address: " + person.getEmail());
       }
 
+      // Iterate through phone numbers    
       for (Person.PhoneNumber phoneNumber : person.getPhonesList()) {
         switch (phoneNumber.getType()) {
           case MOBILE:
@@ -60,65 +62,63 @@ public class ListPeople {
     }
   }
 
+  // Native method that takes proto file name and reads it
   static native void readProtoNative(String filename);
 
+  // Native method that takes a byte array from Java program and reads it
   static native void readProtoNativeByteArray(byte[] byteArray);
 
+  // Native method that takes a byte array, allows user to change it and returns it
   static native byte[] readProtoNativeByteArrayAndModify(byte[] byteArray);
 
   // Main function:  Reads the entire address book from a file and prints all
-  //   the information inside.
+  // the information inside.
   public static void main(String[] args) throws Exception {
     if (args.length != 2) {
       System.err.println("Usage:  ListPeople ADDRESS_BOOK_FILE OPERATION_TYPE");
       System.out.println("OPERATION_TYPES");
-      System.out.println("1 -> READ NATIVE FROM FILE");
-      System.out.println("2 -> READ BYTE ARRAY FROM JAVA AND CONVERT TO PROTO IN C++");
-      System.out.println("3 -> READ BYTE ARRAY FROM JAVA, MODIFY PROTO IN C++ AND THEN RETURN BYTE ARRAY TO JAVA");
+      System.out.println("1 -> Read file using native C++ application");
+      System.out.println("2 -> Read file in Java, pass byte array to C++ application and parse byte array in C++");
+      System.out.println("3 -> Read file in Java, pass and modify byte array in C++ application and return to Java");
       System.exit(-1);
     }
 
-   int operation_type = Integer.parseInt(args[1]);
-   switch(operation_type){
-	   case 1:
-		System.out.println("READ NATIVE FROM FILE OPTION SELECTED");
-		readProtoNative(args[0]);
-		break;
-	   case 2:
-		System.out.println("READ NATIVE FROM BYTE ARRAY SELECTED");
-		AddressBook aBook = 
-			AddressBook.parseFrom(new FileInputStream(args[0]));
-		byte[] bArray = aBook.toByteArray();
-		readProtoNativeByteArray(bArray);
-		break;
-	   case 3:
-		System.out.println("READ NATIVE, MODIFY AND RETURN BYTE ARRAY TO JAVA ");
-		
-		//AddressBook addressBook = null;
-		// Read the existing address book.
-		AddressBook addressBook =
-			AddressBook.parseFrom(new FileInputStream(args[0]));
-		
-		byte[] bArray2 = addressBook.toByteArray();
-		byte[] bArray3 = readProtoNativeByteArrayAndModify(bArray2);
-		AddressBook abookReturned = AddressBook.parseFrom(bArray3);
-		
-		Print(abookReturned);
+    int operation_type = Integer.parseInt(args[1]);
+    switch(operation_type){
+      case 1:
+        System.out.println("Read file using native C++ application");
+	readProtoNative(args[0]);
+	break;
+      case 2:
+        System.out.println("Read file in Java, pass byte array to C++ application and parse byte array in C++");
+        AddressBook aBook = 
+                    AddressBook.parseFrom(new FileInputStream(args[0]));
+        byte[] bArray = aBook.toByteArray();
+        readProtoNativeByteArray(bArray);
+        break;
+      case 3:
+        System.out.println("Read file in Java, pass and modify byte array in C++ application and return to Java");
+        //AddressBook addressBook = null;
+        // Read the existing address book.
+        AddressBook addressBook =
+                    AddressBook.parseFrom(new FileInputStream(args[0]));
 
-		// Store updated proto to file
-		FileOutputStream outputStream = null;
-		try{
-		outputStream = new FileOutputStream(args[0]);
-		outputStream.write(bArray3);
-		} catch(IOException ex){
-			throw ex;
-		} finally {
-			outputStream.close();
-		}
-
-		System.out.println("File stored!!!\n\n");
-		
-
-   }
+        byte[] bArray2 = addressBook.toByteArray();
+        byte[] bArray3 = readProtoNativeByteArrayAndModify(bArray2);
+        AddressBook abookReturned = AddressBook.parseFrom(bArray3);
+        Print(abookReturned);
+        
+        // Store updated proto to file
+        FileOutputStream outputStream = null;
+        try {
+          outputStream = new FileOutputStream(args[0]);
+          outputStream.write(bArray3);
+        } catch(IOException ex) {
+          throw ex;
+        } finally {
+          outputStream.close();
+        }
+        System.out.println("File stored!!!\n\n");
+     }
   }
 }
