@@ -20,7 +20,9 @@
 import com.example.tutorial.AddressBookProtos.AddressBook;
 import com.example.tutorial.AddressBookProtos.Person;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 public class ListPeople {
@@ -84,20 +86,38 @@ public class ListPeople {
 		break;
 	   case 2:
 		System.out.println("READ NATIVE FROM BYTE ARRAY SELECTED");
-		AddressBook abook = 
+		AddressBook aBook = 
 			AddressBook.parseFrom(new FileInputStream(args[0]));
-		byte[] ba = abook.toByteArray();
-		readProtoNativeByteArray(ba);
+		byte[] bArray = aBook.toByteArray();
+		readProtoNativeByteArray(bArray);
 		break;
 	   case 3:
 		System.out.println("READ NATIVE, MODIFY AND RETURN BYTE ARRAY TO JAVA ");
-		AddressBook abook1 =
+		
+		//AddressBook addressBook = null;
+		// Read the existing address book.
+		AddressBook addressBook =
 			AddressBook.parseFrom(new FileInputStream(args[0]));
-		byte[] ba2 = abook1.toByteArray();
-		byte[] ba3 = readProtoNativeByteArrayAndModify(ba2);
-		AddressBook ab2 = AddressBook.parseFrom(ba3);
-		System.out.println("\n\n");
-		Print(ab2);
+		
+		byte[] bArray2 = addressBook.toByteArray();
+		byte[] bArray3 = readProtoNativeByteArrayAndModify(bArray2);
+		AddressBook abookReturned = AddressBook.parseFrom(bArray3);
+		
+		Print(abookReturned);
+
+		// Store updated proto to file
+		FileOutputStream outputStream = null;
+		try{
+		outputStream = new FileOutputStream(args[0]);
+		outputStream.write(bArray3);
+		} catch(IOException ex){
+			throw ex;
+		} finally {
+			outputStream.close();
+		}
+
+		System.out.println("File stored!!!\n\n");
+		
 
    }
   }

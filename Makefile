@@ -36,7 +36,8 @@ protoc_middleman: addressbook.proto
 
 list_people_cpp: list_people.cpp protoc_middleman
 	pkg-config --cflags protobuf  # fails if protobuf is not installed
+	g++ -fPIC -I"$$JAVA_HOME/include" -I"$$JAVA_HOME/include/linux" -o list_people.out list_people.cpp addressbook.pb.cc `pkg-config --cflags --libs protobuf`
 	g++ -fPIC -I"$$JAVA_HOME/include" -I"$$JAVA_HOME/include/linux" -shared -o libreadprotonative.so list_people.cpp addressbook.pb.cc `pkg-config --cflags --libs protobuf`
 
 list_people_java: ListPeople.java protoc_middleman
-	javac -h . -cp $$CLASSPATH2 ListPeople.java com/example/tutorial/AddressBookProtos.java
+	javac -h . -cp $$PROTOBUFJAR ListPeople.java com/example/tutorial/AddressBookProtos.java
