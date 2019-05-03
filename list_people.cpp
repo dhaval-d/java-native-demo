@@ -22,7 +22,6 @@
 #include <unistd.h>
 
 using namespace std;
-
 using google::protobuf::util::TimeUtil;
 
 // Iterates through all people in the AddressBook and prints info about them.
@@ -137,11 +136,9 @@ JNIEXPORT void JNICALL Java_ListPeople_readProtoNative
 		if (!address_book.ParseFromIstream(&input)) {
 		         cerr << "Failed to parse address book." << endl;
 		         exit(0);
-		    }
+		}
 	   }
-	  
 	  env->ReleaseStringUTFChars(jFilePath, fileStr);  // release resources
-
 	  // List address book
 	  ListPeople(address_book);
  }
@@ -168,7 +165,6 @@ JNIEXPORT void JNICALL Java_ListPeople_readProtoNativeByteArray
 // Then makes modifications to Protobuf and sends byte array to java.
 JNIEXPORT jbyteArray JNICALL Java_ListPeople_readProtoNativeByteArrayAndModify
   (JNIEnv *env, jclass thisClass, jbyteArray bArray){
-  
 	  cout << "C++ reading and modification of Proto from ByteArray.\n";
 	  initProto();
 	  tutorial::AddressBook address_book;
@@ -194,11 +190,8 @@ JNIEXPORT jbyteArray JNICALL Java_ListPeople_readProtoNativeByteArrayAndModify
 	 env->SetByteArrayRegion( array, 0, size, (const jbyte*)ret );
 
 	 delete[] ret;
-	 //return address_book.SerializeToArray(array,size);
-
 	 return array;
   }
-
 
 // Main function:  Reads the entire address book from a file and prints all
 //   the information inside.
@@ -213,7 +206,6 @@ int main(int argc, char* argv[]) {
   }
 
   tutorial::AddressBook address_book;
-
   {
     // Read the existing address book.
     fstream input(argv[1], ios::in | ios::binary);
