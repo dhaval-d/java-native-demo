@@ -25,17 +25,17 @@ import java.io.PrintStream;
 
 public class ListPeople { 
   // load native library
-  static{
+  static {
     System.loadLibrary("readprotonative");
   }
   
   // Iterates though all people in the AddressBook and prints info about them.
   static void Print(AddressBook addressBook) {	  
-    System.out.println("Reading AddressBook Proto from Java");
+    System.out.println("\n\n\nReading AddressBook Proto from Java");
     
     // Iterate through persons
     for (Person person: addressBook.getPeopleList()) {
-      System.out.println("Person ID: " + person.getId());
+      System.out.println("\nPerson ID: " + person.getId());
       System.out.println("  Name: " + person.getName());
       if (!person.getEmail().isEmpty()) {
         System.out.println("  E-mail address: " + person.getEmail());
@@ -118,7 +118,7 @@ public class ListPeople {
         } finally {
           outputStream.close();
         }
-        System.out.println("File stored!!!\n\n");
+        System.out.println("File updated!!!\n\n");
      }
   }
 }
