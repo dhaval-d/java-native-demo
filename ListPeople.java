@@ -31,7 +31,7 @@ public class ListPeople {
   
   // Iterates though all people in the AddressBook and prints info about them.
   static void Print(AddressBook addressBook) {	  
-    System.out.println("\n\n\nReading AddressBook Proto from Java");
+    System.out.println("\nReading AddressBook Proto from Java");
     
     // Iterate through persons
     for (Person person: addressBook.getPeopleList()) {
@@ -86,18 +86,18 @@ public class ListPeople {
     int operation_type = Integer.parseInt(args[1]);
     switch(operation_type){
       case 1:
-        System.out.println("Read file using native C++ application");
+        System.out.println("Selected option: Read file using native C++ application");
 	readProtoNative(args[0]);
 	break;
       case 2:
-        System.out.println("Read file in Java, pass byte array to C++ application and parse byte array in C++");
+        System.out.println("Selected option: Read file in Java, pass byte array to C++ application and parse byte array in C++");
         AddressBook aBook = 
                     AddressBook.parseFrom(new FileInputStream(args[0]));
         byte[] bArray = aBook.toByteArray();
         readProtoNativeByteArray(bArray);
         break;
       case 3:
-        System.out.println("Read file in Java, pass and modify byte array in C++ application and return to Java");
+        System.out.println("Selected option: Read file in Java, pass and modify byte array in C++ application and return to Java");
         //AddressBook addressBook = null;
         // Read the existing address book.
         AddressBook addressBook =
@@ -106,6 +106,7 @@ public class ListPeople {
         byte[] bArray2 = addressBook.toByteArray();
         byte[] bArray3 = readProtoNativeByteArrayAndModify(bArray2);
         AddressBook abookReturned = AddressBook.parseFrom(bArray3);
+	System.out.println("\n\nReading returned byte array from C++ in Java");	    
         Print(abookReturned);
         
         // Store updated proto to file
